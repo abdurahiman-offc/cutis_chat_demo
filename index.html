@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automex | WhatsApp Lead System</title>
+    <title>Automex | WhatsApp Lead System Demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,6 +12,7 @@
         body {
             font-family: 'Plus+Jakarta+Sans', sans-serif;
             background: radial-gradient(circle at top right, #0f172a, #020617);
+            overflow: hidden;
         }
 
         .whatsapp-bg { background-color: #e5ddd5; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
@@ -22,8 +23,10 @@
         .wa-list-box { border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; background: white; width: 100%; margin-top: 5px; }
         .wa-list-header { background: #ffffff; color: #00a884; padding: 12px; font-weight: 700; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
         .wa-list-item { padding: 12px; border-bottom: 1px solid #f8f8f8; cursor: pointer; font-size: 14px; color: #111b21; transition: background 0.2s; }
-        .wa-list-item:hover { background: #f0f2f5; }
         
+        /* Auto-select highlighting for demo */
+        .demo-highlight { border: 2px solid #10b981 !important; transform: scale(1.02); background: #f0fdf4 !important; }
+
         .typing-dot { animation: blink 1.4s infinite both; }
         @keyframes blink { 0% { opacity: 0.2; } 20% { opacity: 1; } 100% { opacity: 0.2; } }
 
@@ -40,13 +43,37 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
         }
-        .glass-card:hover {
-            border-color: rgba(16, 185, 129, 0.4);
-            transform: translateY(-2px);
+
+        /* Demo Overlay */
+        .demo-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
         }
+        .pulse { animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+        @keyframes pulse-ring { 0% { transform: scale(.33); } 80%, 100% { opacity: 0; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center text-slate-100">
+
+    <div class="demo-badge uppercase tracking-tighter">
+        <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+        </span>
+        Live Demo Playing
+    </div>
 
     <!-- Top Navigation -->
     <div class="w-full max-w-5xl flex justify-between items-center p-6 mb-4">
@@ -58,10 +85,10 @@
         </div>
         
         <div class="flex bg-slate-900/80 p-1 rounded-2xl border border-slate-800 backdrop-blur-md">
-            <button onclick="switchTab('chat')" id="tab-chat" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all tab-active">
+            <button id="tab-chat" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all tab-active">
                 <i class="fab fa-whatsapp mr-2"></i>Simulator
             </button>
-            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-slate-400 hover:text-white">
+            <button id="tab-dashboard" class="px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-slate-400">
                 <i class="fas fa-chart-line mr-2"></i>Dashboard
             </button>
         </div>
@@ -78,7 +105,7 @@
                     <i class="fas fa-arrow-left"></i>
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-lg font-bold">H</div>
                     <div class="flex-1">
-                        <h2 class="font-bold text-[15px] leading-tight">Pro Career Guide</h2>
+                        <h2 class="font-bold text-[15px] leading-tight">Harvard Admissions</h2>
                         <p class="text-[11px] opacity-80">Online Scholarship Desk</p>
                     </div>
                     <div class="flex gap-4 text-sm">
@@ -96,71 +123,52 @@
                 <!-- Input Area -->
                 <div class="bg-[#f0f0f0] p-4 flex items-center gap-3 shrink-0 z-20">
                     <div class="flex-1 bg-white rounded-full px-4 py-2.5 flex items-center gap-2 shadow-sm border border-gray-200">
-                        <input id="user-input" type="text" placeholder="Type a message" class="flex-1 outline-none text-[15px] bg-transparent text-slate-900" disabled>
+                        <input id="user-input" type="text" placeholder="Auto-typing..." class="flex-1 outline-none text-[15px] bg-transparent text-slate-900" disabled>
                     </div>
-                    <button id="send-btn" onclick="handleUserInput()" class="bg-[#075e54] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md opacity-50 transition-transform active:scale-90" disabled>
+                    <button id="send-btn" class="bg-[#075e54] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md opacity-50 transition-transform" disabled>
                         <i class="fas fa-paper-plane text-sm"></i>
                     </button>
                 </div>
             </div>
-
-            <button onclick="initChat()" class="mt-8 bg-slate-900/80 backdrop-blur-sm text-emerald-400 px-8 py-3.5 rounded-2xl shadow-xl font-bold uppercase tracking-widest hover:bg-slate-800 active:scale-95 transition-all flex items-center gap-3 border border-slate-700">
-                <i class="fas fa-sync-alt"></i> Restart Demo
-            </button>
         </div>
 
         <!-- Tab 2: Dashboard -->
         <div id="view-dashboard" class="hidden w-full max-w-6xl pb-20 fade-in">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 bg-slate-900/40 p-6 rounded-3xl border border-slate-800">
                 <div>
-                    <h2 class="text-3xl font-extrabold tracking-tight">QUALIFIED <span class="text-emerald-500">LEADS</span></h2>
-                    <p class="text-slate-400 text-sm mt-1">Reviewing candidates for scholarship eligibility</p>
+                    <h2 class="text-3xl font-extrabold tracking-tight uppercase">Qualified <span class="text-emerald-500">Leads</span></h2>
+                    <p class="text-slate-400 text-sm mt-1">Real-time leads automatically captured from WhatsApp interaction</p>
                 </div>
-                <button onclick="clearLeads()" class="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border border-red-500/20 group">
-                    <i class="fas fa-trash-alt group-hover:animate-pulse"></i> Clear Database
-                </button>
+                <div class="flex items-center gap-4">
+                    <div class="bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-xl text-emerald-500 text-xs font-bold">
+                        1 NEW LEAD CAPTURED
+                    </div>
+                </div>
             </div>
 
             <div id="leads-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Cards injected here -->
-            </div>
-
-            <!-- Empty State -->
-            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-32 bg-slate-900/20 rounded-[3rem] border-2 border-dashed border-slate-800/50">
-                <div class="w-20 h-20 bg-slate-800/50 rounded-full flex items-center justify-center mb-6">
-                    <i class="fas fa-user-secret text-4xl text-slate-600"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-400">Database is empty</h3>
-                <p class="text-slate-500 text-sm mt-2">Active leads will appear here after chat completion.</p>
-                <button onclick="switchTab('chat')" class="mt-6 text-emerald-500 font-bold hover:underline">Go to Simulator →</button>
             </div>
         </div>
 
     </main>
 
     <script>
-        // State Management
         const chat = document.getElementById('chat-container');
         const input = document.getElementById('user-input');
         const btn = document.getElementById('send-btn');
         const leadsGrid = document.getElementById('leads-grid');
-        const emptyState = document.getElementById('empty-state');
         
-        let currentStep = "";
-        let userData = {
-            name: "",
-            course: "",
-            location: "",
-            college: ""
-        };
+        let demoLead = null;
 
-        const collegeData = {
-            'Manglore': ['Sreenivasa', 'Yenepoa', 'AJ', 'MV Shetty', 'Kanachur', 'Manglore College of Allied'],
-            'Banglore': ['Christ', 'Jain', 'Ajaria', 'Reva'],
-            'Tamil Nadu': ['JSS', 'SRM']
-        };
+        const demoData = [
+            { name: "Rahul Sharma", course: "BCA", location: "Banglore", college: "Christ University" },
+            { name: "Ananya Iyer", course: "Nursing", location: "Manglore", college: "Yenepoa University" },
+            { name: "Kevin Peter", course: "Paramedical", location: "Tamil Nadu", college: "SRM University" }
+        ];
 
-        // Tab Switching
+        let dataPointer = 0;
+
         function switchTab(tab) {
             const chatView = document.getElementById('view-chat');
             const dashView = document.getElementById('view-dashboard');
@@ -171,41 +179,14 @@
                 chatView.classList.remove('hidden');
                 dashView.classList.add('hidden');
                 chatBtn.classList.add('tab-active');
-                chatBtn.classList.remove('text-slate-400');
                 dashBtn.classList.remove('tab-active');
-                dashBtn.classList.add('text-slate-400');
             } else {
                 chatView.classList.add('hidden');
                 dashView.classList.remove('hidden');
                 dashBtn.classList.add('tab-active');
-                dashBtn.classList.remove('text-slate-400');
                 chatBtn.classList.remove('tab-active');
-                chatBtn.classList.add('text-slate-400');
-                renderLeads();
+                renderDemoLead();
             }
-        }
-
-        // --- WHATSAPP CORE ---
-
-        function initChat() {
-            chat.innerHTML = '<div id="anchor"></div>';
-            currentStep = "";
-            userData = { name: "", course: "", location: "", college: "" };
-            input.value = "";
-            input.disabled = true;
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-
-            addMsg('Hello 👋<br><br>Welcome to the <b>Pro Career</b> scholarship portal. Are you looking to join a professional course this year?', 'in');
-            
-            renderButtons(['YES', 'NO'], (val) => {
-                if(val === 'YES') handleStart();
-                else handleExit();
-            });
-        }
-
-        function forceScroll() {
-            setTimeout(() => { chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' }); }, 50);
         }
 
         function addMsg(text, side) {
@@ -213,95 +194,60 @@
             msg.className = `${side === 'out' ? 'message-out self-end' : 'message-in self-start'} p-3.5 max-w-[85%] mb-1.5 fade-in text-slate-900 leading-relaxed`;
             msg.innerHTML = `<p class="text-[14px]">${text}</p>`;
             chat.insertBefore(msg, document.getElementById('anchor'));
-            forceScroll();
+            chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
         }
 
-        function showTyping(callback) {
+        async function typeText(text) {
+            input.value = "";
+            for (let i = 0; i < text.length; i++) {
+                input.value += text[i];
+                await new Promise(r => setTimeout(r, 60));
+            }
+            await new Promise(r => setTimeout(r, 400));
+            btn.classList.remove('opacity-50');
+            btn.classList.add('scale-110');
+            await new Promise(r => setTimeout(r, 200));
+            addMsg(text, 'out');
+            input.value = "";
+            btn.classList.add('opacity-50');
+            btn.classList.remove('scale-110');
+        }
+
+        async function showTyping() {
             const t = document.createElement('div');
-            t.className = 'text-[11px] text-gray-500 font-medium ml-2 mb-2 fade-in';
+            t.className = 'text-[11px] text-gray-500 font-medium ml-2 mb-2';
             t.innerHTML = 'typing<span class="typing-dot">.</span><span class="typing-dot">.</span><span class="typing-dot">.</span>';
             chat.insertBefore(t, document.getElementById('anchor'));
-            forceScroll();
-            setTimeout(() => { t.remove(); callback(); }, 800);
+            await new Promise(r => setTimeout(r, 1200));
+            t.remove();
         }
 
-        function handleStart() {
-            showTyping(() => {
-                addMsg('Great! Let\'s start with your <b>Full Name</b>?', 'in');
-                input.disabled = false; btn.disabled = false; btn.classList.remove('opacity-50');
-                input.focus();
-                currentStep = "ASK_NAME";
-            });
-        }
-
-        function handleExit() {
-            addMsg('No problem! Feel free to message us anytime you change your mind. Have a nice day!', 'in');
-        }
-
-        function handleUserInput() {
-            const val = input.value.trim();
-            if(!val) return;
-            addMsg(val, 'out');
-            input.value = '';
-            input.disabled = true; btn.disabled = true; btn.classList.add('opacity-50');
-
-            if(currentStep === "ASK_NAME") {
-                userData.name = val;
-                showTyping(() => {
-                    addMsg(`Nice to meet you, ${val}! Which stream are you interested in?`, 'in');
-                    renderButtons(['BCA', 'Paramedical', 'Nursing'], (course) => {
-                        userData.course = course;
-                        showTyping(() => {
-                            addMsg('Please select your preferred location:', 'in');
-                            renderButtons(['Manglore', 'Banglore', 'Tamil Nadu', 'Other'], handleLocationChoice);
-                        });
-                    });
-                });
-            } else if(currentStep === "ASK_OTHER_UNI") {
-                userData.college = val;
-                userData.location = "Custom";
-                saveLead();
-                showTyping(() => {
-                    addMsg(`Success! A career guide will contact you regarding <b>${val}</b> soon.`, 'in');
-                });
-            }
-        }
-
-        function renderButtons(opts, callback) {
+        async function autoSelectOption(options, matchText) {
             const div = document.createElement('div');
             div.className = 'flex flex-col gap-2 max-w-[85%] mt-1 fade-in';
-            opts.forEach(o => {
+            let chosenBtn = null;
+            
+            options.forEach(o => {
                 const b = document.createElement('button');
-                b.className = 'bg-white text-[#075e54] py-3.5 rounded-xl shadow-sm border border-emerald-100 text-left px-5 hover:bg-emerald-50 active:scale-[0.98] transition-all font-bold text-[14px]';
+                b.className = 'bg-white text-[#075e54] py-3.5 rounded-xl shadow-sm border border-emerald-100 text-left px-5 font-bold text-[14px] transition-all';
                 b.innerText = o;
-                b.onclick = () => {
-                    div.classList.add('hide-anim');
-                    setTimeout(() => div.remove(), 300);
-                    addMsg(o, 'out');
-                    callback(o);
-                };
+                if(o === matchText) chosenBtn = b;
                 div.appendChild(b);
             });
+
             chat.insertBefore(div, document.getElementById('anchor'));
-            forceScroll();
+            chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+
+            await new Promise(r => setTimeout(r, 1000));
+            chosenBtn.classList.add('demo-highlight');
+            await new Promise(r => setTimeout(r, 600));
+            
+            div.classList.add('hide-anim');
+            setTimeout(() => div.remove(), 300);
+            addMsg(matchText, 'out');
         }
 
-        function handleLocationChoice(loc) {
-            userData.location = loc;
-            if(loc === 'Other') {
-                addMsg('Which specific college or city are you looking for?', 'in');
-                input.disabled = false; btn.disabled = false; btn.classList.remove('opacity-50');
-                input.focus();
-                currentStep = "ASK_OTHER_UNI";
-            } else {
-                showTyping(() => {
-                    addMsg(`Found some top-rated universities in <b>${loc}</b> for your course:`, 'in');
-                    renderList(loc);
-                });
-            }
-        }
-
-        function renderList(loc) {
+        async function autoSelectList(loc, matchCollege) {
             const wrapper = document.createElement('div');
             wrapper.className = 'w-[85%] self-start fade-in mb-4';
             wrapper.innerHTML = `
@@ -309,67 +255,49 @@
                 <div class="wa-list-box rounded-t-none mt-0 shadow-lg"></div>
             `;
             const listBox = wrapper.querySelector('.wa-list-box');
-            (collegeData[loc] || []).forEach(c => {
+            let chosenItem = null;
+
+            const colleges = (loc === 'Banglore') ? ['Christ University', 'Jain University', 'Reva University'] : 
+                            (loc === 'Manglore') ? ['Sreenivasa University', 'Yenepoa University', 'AJ University'] : 
+                            ['SRM University', 'JSS University'];
+
+            colleges.forEach(c => {
                 const item = document.createElement('div');
                 item.className = 'wa-list-item px-5 py-3.5 border-b last:border-b-0';
-                item.innerText = `${c} University`;
-                item.onclick = function() { 
-                    wrapper.classList.add('hide-anim');
-                    setTimeout(() => wrapper.remove(), 300);
-                    const selectedCollege = `${c} University`;
-                    userData.college = selectedCollege;
-                    saveLead();
-                    addMsg(selectedCollege, 'out');
-                    showTyping(() => {
-                        addMsg(`Success! A career guide will contact you regarding <b>${selectedCollege}</b> soon.`, 'in');
-                    });
-                };
+                item.innerText = c;
+                if(c === matchCollege) chosenItem = item;
                 listBox.appendChild(item);
             });
+
             chat.insertBefore(wrapper, document.getElementById('anchor'));
-            forceScroll();
+            chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+
+            await new Promise(r => setTimeout(r, 1200));
+            chosenItem.classList.add('bg-emerald-50', 'text-emerald-700', 'font-bold');
+            await new Promise(r => setTimeout(r, 800));
+
+            wrapper.classList.add('hide-anim');
+            setTimeout(() => wrapper.remove(), 300);
+            addMsg(matchCollege, 'out');
         }
 
-        // --- DASHBOARD LOGIC ---
-
-        function saveLead() {
-            const leads = JSON.parse(localStorage.getItem('automex_leads') || '[]');
-            const newLead = {
-                ...userData,
-                id: Date.now(),
-                timestamp: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
-            };
-            leads.unshift(newLead);
-            localStorage.setItem('automex_leads', JSON.stringify(leads));
-        }
-
-        function renderLeads() {
-            const leads = JSON.parse(localStorage.getItem('automex_leads') || '[]');
-            leadsGrid.innerHTML = "";
-            
-            if(leads.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            }
-            
-            emptyState.classList.add('hidden');
-            leads.forEach(lead => {
-                const card = document.createElement('div');
-                card.className = 'glass-card p-6 rounded-[2rem] transition-all flex flex-col gap-5';
-                card.innerHTML = `
+        function renderDemoLead() {
+            if(!demoLead) return;
+            leadsGrid.innerHTML = `
+                <div class="glass-card p-6 rounded-[2rem] transition-all flex flex-col gap-5 border-emerald-500/50 scale-105 shadow-emerald-500/20">
                     <div class="flex justify-between items-start">
                         <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
                             <i class="fas fa-user-graduate text-white text-lg"></i>
                         </div>
                         <div class="text-right">
-                            <span class="block text-[10px] text-slate-500 font-bold uppercase tracking-widest">Received</span>
-                            <span class="text-[11px] text-slate-300 font-medium">${lead.timestamp}</span>
+                            <span class="block text-[10px] text-emerald-500 font-bold uppercase tracking-widest animate-pulse">Just Captured</span>
+                            <span class="text-[11px] text-slate-300 font-medium">1 second ago</span>
                         </div>
                     </div>
                     <div>
-                        <h3 class="text-white font-extrabold text-xl tracking-tight mb-1">${lead.name}</h3>
+                        <h3 class="text-white font-extrabold text-xl tracking-tight mb-1">${demoLead.name}</h3>
                         <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                            ${lead.course}
+                            ${demoLead.course}
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-2">
@@ -377,38 +305,73 @@
                             <span class="block text-[9px] text-slate-500 uppercase font-bold tracking-wider mb-1">Region</span>
                             <div class="flex items-center gap-2">
                                 <i class="fas fa-map-pin text-emerald-500 text-[10px]"></i>
-                                <span class="text-slate-200 text-xs font-semibold">${lead.location}</span>
+                                <span class="text-slate-200 text-xs font-semibold">${demoLead.location}</span>
                             </div>
                         </div>
                         <div class="bg-slate-800/40 p-3 rounded-2xl border border-slate-700/50">
                             <span class="block text-[9px] text-slate-500 uppercase font-bold tracking-wider mb-1">Institution</span>
                             <div class="flex items-center gap-2">
                                 <i class="fas fa-building text-emerald-500 text-[10px]"></i>
-                                <span class="text-slate-200 text-xs font-semibold truncate">${lead.college.split(' ')[0]}</span>
+                                <span class="text-slate-200 text-xs font-semibold truncate">${demoLead.college.split(' ')[0]}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-4 border-t border-slate-800/60 mt-auto">
-                        <div class="flex items-center gap-2 text-slate-400">
-                             <i class="fas fa-check-circle text-emerald-500 text-xs"></i>
-                             <span class="text-[11px] font-medium italic">Verified Lead: ${lead.college}</span>
-                        </div>
-                    </div>
-                `;
-                leadsGrid.appendChild(card);
-            });
+                </div>
+            `;
         }
 
-        function clearLeads() {
-            if(confirm('This will wipe all collected leads from this browser. Continue?')) {
-                localStorage.removeItem('automex_leads');
-                renderLeads();
+        async function startDemoLoop() {
+            while(true) {
+                // Reset State
+                dataPointer = (dataPointer + 1) % demoData.length;
+                const currentData = demoData[dataPointer];
+                demoLead = null;
+                chat.innerHTML = '<div id="anchor"></div>';
+                switchTab('chat');
+
+                // Step 1: Welcome
+                await new Promise(r => setTimeout(r, 1000));
+                addMsg('Hello 👋<br><br>Welcome to the <b>Harvard University</b> scholarship portal. Are you looking to join a professional course this year?', 'in');
+                await autoSelectOption(['YES', 'NO'], 'YES');
+
+                // Step 2: Name
+                await showTyping();
+                addMsg('Great! Let\'s start with your <b>Full Name</b>?', 'in');
+                await new Promise(r => setTimeout(r, 500));
+                await typeText(currentData.name);
+
+                // Step 3: Course
+                await showTyping();
+                addMsg(`Nice to meet you, ${currentData.name}! Which stream are you interested in?`, 'in');
+                await autoSelectOption(['BCA', 'Paramedical', 'Nursing'], currentData.course);
+
+                // Step 4: Location
+                await showTyping();
+                addMsg('Please select your preferred location:', 'in');
+                await autoSelectOption(['Manglore', 'Banglore', 'Tamil Nadu'], currentData.location);
+
+                // Step 5: College
+                await showTyping();
+                addMsg(`Found some top-rated universities in <b>${currentData.location}</b> for your course:`, 'in');
+                await autoSelectList(currentData.location, currentData.college);
+
+                // Step 6: Final
+                await showTyping();
+                addMsg(`Success! A career guide will contact you regarding <b>${currentData.college}</b> soon.`, 'in');
+                
+                // Finalize Lead
+                demoLead = currentData;
+                
+                // Transition to Dashboard
+                await new Promise(r => setTimeout(r, 2000));
+                switchTab('dashboard');
+                
+                // Wait to let client see lead
+                await new Promise(r => setTimeout(r, 5000));
             }
         }
 
-        input.addEventListener("keypress", (e) => { if(e.key === "Enter" && !input.disabled) handleUserInput(); });
-
-        initChat();
+        window.onload = startDemoLoop;
     </script>
 </body>
 </html>
